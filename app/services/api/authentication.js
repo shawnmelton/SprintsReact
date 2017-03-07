@@ -1,7 +1,8 @@
 import appConfig from '../../config';
 import GetAPIRequest from './getApiRequest';
 
-import Base64 from '../../../node_modules/base-64';
+import logger from '../logger';
+import session from '../session';
 
 class Authentication extends GetAPIRequest {
     constructor() {
@@ -9,20 +10,14 @@ class Authentication extends GetAPIRequest {
 
         this.username = null;
         this.password = null;
-        this.basicAuthString = null;
-    }
 
-    getBasicAuthString() {
-        return this.basicAuthString;
-    }
-
-    setBasicAuthString(username, password) {
-        this.username = username;
-        this.password = password;
-        
-        this.basicAuthString = Base64.encode(this.username +':'+ this.password);
-        this.setAuthentication(this.basicAuthString);
-        console.error(this.basicAuthString);
+        this.setHeadersCallback((headers) => {
+            try {
+                session.setString(headers.map['set-cookie'][0]);
+            } catch (error) {
+                logger.error('Failed Parsing Response Headers', error.message);
+            }
+        });
     }
 }
 

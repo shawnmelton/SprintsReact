@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { LayoutAnimation } from 'react-native';
+import { LayoutAnimation, Keyboard } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 
 import Authentication from '../services/api/authentication';
-import UserMapper from '../services/mappers/user';
 
+import base64 from '../../node_modules/base-64';
+import logger from '../services/logger';
 import slideInAnimation from '../animations/slideIn';
 import slideOutAnimation from '../animations/slideOut';
 import currentUser from '../models/currentUser';
@@ -31,8 +32,21 @@ class SignIn extends Component {
                 borderWidth: 0,
                 message: '',
                 backgroundColor: 'rgba(0, 0, 0, 0)'
+            },
+            form: {
+                marginBottom: 50
             }
         };
+    }
+
+    componentWillMount () {
+        this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => { this.onKeyboardShow() });
+        this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => { this.onKeyboardHide() });
+    }
+
+    componentWillUnmount() {
+        this.keyboardDidShowListener.remove();
+        this.keyboardDidHideListener.remove();
     }
 
     onFormFieldChange() {
@@ -43,25 +57,39 @@ class SignIn extends Component {
 
     onFormSubmit(hideButtonLoaderCallback) {
         let auth = new Authentication();
-        auth.setBasicAuthString(this.state.username, this.state.password);
+        auth.setAuthorization(base64.encode(this.state.username +':'+ this.state.password));
         auth.call((json) => {
             if (json.name) {
-                currentUser.setBasicAuthString(auth.getBasicAuthString());
+                currentUser.setBasicAuthString(base64.encode(this.state.username +':'+ this.state.password));
+                currentUser.setLogIn();
+                currentUser.setUsername(json.name);
 
-                // Map JSON to model.
-                let mapper = new UserMapper(currentUser);
-                currentUser = mapper.fromJSON(json);
-
-                Actions.dashboard({
+                Actions.loadingProfile({
                     'type': 'reset'
                 });
             } else {
                 this.toggleFormError();
                 hideButtonLoaderCallback();
             }
-        }, () => {
+        }, (error) => {
             this.toggleFormError();
             hideButtonLoaderCallback();
+        });
+    }
+
+    onKeyboardShow() {
+        this.setState({
+            form: {
+                marginBottom: 225
+            }
+        });
+    }
+
+    onKeyboardHide() {
+        this.setState({
+            form: {
+                marginBottom: 50
+            }
         });
     }
 

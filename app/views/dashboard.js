@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 
-class SignIn extends Component {
-  render() {
-    return (
-      <View>
-      </View>
-    );
-  }
+class Dashboard extends Component {
+    render() {
+        return (
+            <View />
+        );
+    }
 }
 
-export default SignIn;
+export default Dashboard;

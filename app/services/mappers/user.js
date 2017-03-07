@@ -1,19 +1,18 @@
-class UserMapper {
-    constructor(user) {
-        this.user = user;
-    }
+import User from '../../models/user';
 
+class UserMapper {
     fromJSON(json) {
         try {
-            this.user.setUsername(json.name);
-            this.user.setDisplayName(json.displayName);
-            this.user.setEmailAddress(json.emailAddress);
-            this.user.setAvatar(json.avatarUrls['48x48']);
-
-        } catch (e) {}
-
-        return this.user;
+            let user = new User();
+            user.setUsername(json.name);
+            user.setDisplayName(json.displayName);
+            user.setEmailAddress(json.emailAddress);
+            user.setAvatar(json.avatarUrls['48x48']);
+            return user;
+        } catch (e) {
+            return null;
+        }
     }
 }
 
-default export UserMapper;
+export default UserMapper;

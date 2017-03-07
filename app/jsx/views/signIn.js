@@ -14,7 +14,7 @@ let fwkStyles = require('../../styles/framework'),
                 <View style={[fwkStyles.bgTransparent, fwkStyles.flex1, fwkStyles.alignCenter, fwkStyles.justifySpaceBetween, fwkStyles.flexColumns]}>
                     <Image style={[fwkStyles.margin10, fwkStyles.marginTop50, {width: 125, height: 194}]}
                         source={require('../../img/fullLogo2.png')} />
-                    <View style={[fwkStyles.margin10, fwkStyles.marginBottom50, {width: 300}]}>
+                    <View style={[fwkStyles.margin10, {width: 300, marginBottom: this.state.form.marginBottom}]}>
                         <Text style={[fwkStyles.bgError, fwkStyles.textError, fwkStyles.borderError, fwkStyles.textCenter, fwkStyles.textBold, {
                                 padding: this.state.errorText.padding,
                                 borderWidth: this.state.errorText.borderWidth,

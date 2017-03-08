@@ -15,17 +15,14 @@ class SignIn extends Component {
     constructor(props) {
         super(props);
 
-        if (currentUser.isLoggedIn()) {
-            Actions.dashboard({
-                type: 'reset'
-            });
-        }
-
         this.formErrorShowing = false;
 
         this.state = {
             username: '',
             password: '',
+            view: {
+                opacity: 0
+            },
             errorText: {
                 padding: 0,
                 marginBottom: 0,
@@ -37,9 +34,24 @@ class SignIn extends Component {
                 marginBottom: 50
             }
         };
+
+        currentUser.verifyLogIn()
+            .then((userIsLoggedIn) => {
+                if (userIsLoggedIn) {
+                    Actions.loadingProfile({
+                        type: 'reset'
+                    });
+                } else {
+                    this.setState({
+                        view: {
+                            opacity: 1
+                        }
+                    });
+                }
+            });
     }
 
-    componentWillMount () {
+    componentWillMount() {
         this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => { this.onKeyboardShow() });
         this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => { this.onKeyboardHide() });
     }

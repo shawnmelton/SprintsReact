@@ -11,7 +11,8 @@ let fwkStyles = require('../../styles/framework'),
     template = function() {
         return (
             <FullScreenImage source={require('../../img/backgroundFull2.png')}>
-                <View style={[fwkStyles.bgTransparent, fwkStyles.flex1, fwkStyles.alignCenter, fwkStyles.justifySpaceBetween, fwkStyles.flexColumns]}>
+                <View style={[fwkStyles.bgTransparent, fwkStyles.flex1, fwkStyles.alignCenter, fwkStyles.justifySpaceBetween, fwkStyles.flexColumns, 
+                    { opacity: this.state.view.opacity }]}>
                     <Image style={[fwkStyles.margin10, fwkStyles.marginTop50, {width: 125, height: 194}]}
                         source={require('../../img/fullLogo2.png')} />
                     <View style={[fwkStyles.margin10, {width: 300, marginBottom: this.state.form.marginBottom}]}>

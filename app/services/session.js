@@ -16,9 +16,13 @@ class Session {
         }
     }
 
-    setString(header) {
-        if (typeof header === 'string' && header.indexOf(';') !== -1) {
-            this.parseResponseHeader(header);
+    setString(string) {
+        if (typeof string === 'string') {
+            if (string.indexOf(';') !== -1) {
+                this.parseResponseHeader(string);
+            } else {
+                this.sessionString = string;
+            }
         }
     }
 }

@@ -72,8 +72,14 @@ module.exports = StyleSheet.create({
         borderStyle: 'solid',
         borderWidth: 1,
     },
+    borderAccentBlue: {
+        borderColor: ForRentStyles.accentBlue
+    },
     borderError: {
         borderColor: ErrorStyles.mediumRed,
+    },
+    borderLeftTransparent:  {
+        borderLeftColor: 'transparent'
     },
     borderWhite: {
         borderColor: '#fff',
@@ -151,8 +157,14 @@ module.exports = StyleSheet.create({
     clearWidth: {
         width: null,
     },
+    height0: {
+        height: 0
+    },
     height50: {
         height: 50,
+    },
+    width0: {
+        width: 0
     },
 
     /* Text */

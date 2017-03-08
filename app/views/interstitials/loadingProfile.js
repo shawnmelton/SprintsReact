@@ -6,11 +6,17 @@ import UserProfileRequest from '../../services/api/userProfileRequest';
 import UserMapper from '../../services/mappers/user';
 
 import currentUser from '../../models/currentUser';
+import logger from '../../services/logger';
 import template from '../../jsx/interstitials/loadingProfile';
 
 class LoadingProfile extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+
+        };
+
         this.loadProfile();
     }
 
@@ -24,11 +30,11 @@ class LoadingProfile extends Component {
                 type: 'reset'
             });*/
         }, (error) => {
-            console.log('Error callback: ', error);
+            logger.warn('Unable to properly load user profile: ', error.message);
 
-            Actions.signIn({
+            /*Actions.signIn({
                 type: 'reset'
-            });
+            });*/
         });
     }
 

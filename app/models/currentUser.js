@@ -4,6 +4,8 @@ import User from './user';
 
 import appConfig from '../config';
 import logger from '../services/logger';
+import session from '../services/session';
+import base64 from '../../node_modules/base-64';
 
 class CurrentUser {
     constructor() {
@@ -11,14 +13,16 @@ class CurrentUser {
         this.loggedIn = false;
         this.basicAuthString = null;
         this.username = null;
-
-        this.load();
+        this.loaded = false;
     }
 
     _parseUserTokenString(string) {
         if (string !== null && typeof string === 'string') {
             this.loggedIn = true;
+            this.basicAuthString = string;
 
+            string = base64.decode(string);
+            this.username = string.substr(0, string.indexOf(':'));
         }
     }
 
@@ -26,11 +30,17 @@ class CurrentUser {
         return this.loggedIn;
     }
 
-    load() {
+    async load() {
+        this.loaded = true;
+
         try {
-            this._parseUserTokenString(await AsyncStorage.getItem(appConfig.storage.currentUser));
+            this._parseUserTokenString(await AsyncStorage.getItem(appConfig.storageTokens.currentUser));
+
+            if (this.loggedIn) {
+                session.setString();
+            }
         } catch(error) {
-            logger.error('Error loading current user.');
+            logger.error('Error loading user from storage: '+ error.message);
         }
     }
 
@@ -55,8 +65,9 @@ class CurrentUser {
         this.basicAuthString = string;
     }
 
-    setLogIn() {
+    async setLogIn() {
         this.loggedIn = true;
+        await AsyncStorage.setItem(appConfig.storageTokens.currentUser, this.basicAuthString);
     }
 
     setUser(user) {
@@ -65,6 +76,11 @@ class CurrentUser {
 
     setUsername(username) {
         this.username = username;
+    }
+
+    async verifyLogIn() {
+        await this.load();
+        return this.loggedIn;
     }
 }
 
